@@ -9,14 +9,14 @@ export const getMessage = async(req,res)=>{
     const user = await User.findById(receiverId)
     // console.log(receiverId+" "+senderId+" "+user)
     if(!user){
-        return res.status(404).json({error:"User not found"})
+        return res.status(404).json({message:"User not found"})
     }
     try {
 
         const conversation = await Conversation.findOne({ participants:{$all:[senderId,receiverId]} }).populate("messages")
         
         if(!conversation){
-            return res.status(404).json({error:"Message not found"})
+            return res.status(404).json({messages:[]})
         }
         const messages = conversation.messages
         return res.status(200).json({messages})
@@ -59,7 +59,7 @@ export const sendMessage = async(req,res)=>{
         
         await Promise.all([conversation.save(),newMessage.save()])
 
-        res.status(200).json(conversation)
+        res.status(200).json({message:newMessage})
 
     }
     catch(error){

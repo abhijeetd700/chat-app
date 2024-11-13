@@ -1,14 +1,36 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
-    const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
+	
+	const navigate = useNavigate();
 
-    const handleSubmit = (e)=>{
+	const [inputs,setInputs] = useState({
+		userName:'',
+		password:''
+	})
+
+	const {login} = useContext(AuthContext)
+
+	const handleChange = (e)=>{
+		
+		const {name,value} =  e.target
+
+		// console.log(name+" "+value)
+
+		setInputs({
+			...inputs,
+			[name]:value
+		})
+
+	}
+    const handleSubmit = async (e)=>{
         e.preventDefault()
-
+		await login(inputs)		
+		navigate("/")
     }
+	
     return (
         <div className='flex flex-col items-center justify-center min-w-96 mx-auto'>
 			<div className='w-full p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0'>
@@ -23,11 +45,11 @@ const Login = () => {
 							<span className='text-base label-text'>Username</span>
 						</label>
 						<input
+							name='userName'
 							type='text'
 							placeholder='Enter username'
 							className='w-full input input-bordered h-10'
-							value={username}
-							onChange={(e) => setUsername(e.target.value)}
+							onChange={handleChange}
 						/>
 					</div>
 
@@ -36,20 +58,19 @@ const Login = () => {
 							<span className='text-base label-text'>Password</span>
 						</label>
 						<input
+							name='password'
 							type='password'
 							placeholder='Enter Password'
 							className='w-full input input-bordered h-10'
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
+							onChange={handleChange}
 						/>
 					</div>
-					{/* <Link to='/signup' className='text-sm  hover:underline hover:text-blue-600 mt-2 inline-block'> */}
-					<div className='text-sm  hover:underline hover:text-blue-600 mt-2 inline-block cursor-pointer'>
-                        "Don't" have an account?
-
-                    </div>
-					{/* </Link> */}
-
+					<Link to="/signup">
+						<div className='text-sm  hover:underline hover:text-blue-600 mt-2 inline-block cursor-pointer'>
+							"Don't" have an account?
+						</div>
+					</Link>
+					
 					<div>
 						<button className='btn btn-block btn-sm mt-2 bg-blue-500 text-white' >
 							{/* {loading ? <span className='loading loading-spinner '></span> : "Login"} */}

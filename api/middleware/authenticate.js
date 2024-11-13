@@ -4,8 +4,10 @@ import User from '../models/User.model.js';
 const auth = async(req,res,next)=>{
     try {
         // Get the token from headers, cookies, or query (based on where you store it)
-        const token = req.cookies.authToken;
-
+        // const token = req.cookies.authToken;
+        // console.log(req)
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
         if (!token) {
             return res.status(401).json({ error: 'Unauthorized - No Token Provided"' });
         }

@@ -16,15 +16,16 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 
-const allowedOrigins = ['http://localhost:5173/']; 
+const allowedOrigins = ['http://127.0.0.1:5173','http://localhost:5173']; 
 
-app.use(cors({origin: allowedOrigins,credentials:true}));
 app.use(cookieParser());
 // Use body-parser middleware
 app.use(bodyParser.json());  // Parses incoming JSON requests
 app.use(bodyParser.urlencoded({ extended: true }));  // Parses URL-encoded data
 
 app.use(express.json())
+
+app.use(cors({origin: allowedOrigins,credentials:true}));
 
 app.use("/api/auth",authRoute)
 app.use("/api/messages",messsageRoute)

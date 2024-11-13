@@ -1,32 +1,41 @@
 import User from "../models/User.model.js"
 import bcrypt from "bcryptjs"
-import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js"
-
+// import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js"
+import jwt from 'jsonwebtoken'
 
 export const login = async(req,res)=>{
     
     try{
-        const {userName,password} = req.body
+        // const {userName,password} = req.body
 
-        const user = await User.findOne({userName})
+        const user = await User.findOne({userName:req.body.userName})
 
         if(!user){
-            return res.status(404).json({error:"User not found"})
+            return res.status(404).json({message:"User not found. Please sign up..!"})
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(req.body.password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
         // Generate JWT
-        const token = generateTokenAndSetCookie(req,res,user._id);
+        // const token = generateTokenAndSetCookie(req,res,user._id);
+
+        // res.status(200).json({
+        //         _id:user._id,
+        //         fullName: user.fullName,
+        //         username: user.username,
+        //         profilePic: user.profilePic,
+        // })
+        const token = jwt.sign({id:user.id},process.env.JWT_SECRET,{expiresIn: process.env.JWT_EXPIRES_IN})
 
         res.status(200).json({
-            message:{
+            token,
+            userData:{
                 _id:user._id,
                 fullName: user.fullName,
-                username: user.username,
+                userName: user.userName,
                 profilePic: user.profilePic,
             }
         })
@@ -41,10 +50,10 @@ export const login = async(req,res)=>{
 
 export const logout = async(req,res)=>{
     try{
-        res.cookie("token","",{maxAge:0})
+        res.cookie("authToken","",{maxAge:0})
         res.status(200).json({message:"Logged out successfully."})
     }
-    catch(error){
+    catch(error){   
         console.log(error)
         res.status(500).json({message:error.message,name:error.name,stack:error.stack})
     }
@@ -57,13 +66,13 @@ export const signup = async(req,res)=>{
         const {fullName,userName,password,confirmPassword,gender} = req.body;
 
         if(password !== confirmPassword){
-            return res.status(400).json({error:"Passwords don't match"})
+            return res.status(400).json({message:"Passwords don't match"})
         }
 
         const user = await User.findOne({userName:userName})
 
         if(user){
-            return res.status(400).json({error:"User already exists"})
+            return res.status(400).json({message:"User already exists, please login"})
         }
 
         //Hash password
@@ -89,7 +98,7 @@ export const signup = async(req,res)=>{
             })
         }
         else{
-            res.status(400).json({error:"Invalid User Data"})
+            res.status(400).json({message:"Invalid User Data"})
         }
         
     }
