@@ -4,7 +4,7 @@ import axios from 'axios';
 // import Cookies from 'universal-cookie';
 // Create an Axios instance with a base URL
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8800/api",  // Replace with your backend URL
+  baseURL: "https://chat-app-abhi.onrender.com/api",  // Replace with your backend URL
   // withCredentials: true,             // Allows cookies to be sent with requests
   headers: {
     'Content-Type': 'application/json',
