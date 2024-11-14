@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import GenderCheckbox from './GenderCheckBox'
+
 import { Link, useNavigate } from 'react-router-dom'
 import axiosInstance from '../axiosConfig'
 import useSignUp from '../hooks/useSignUp'
+import GenderCheckbox from '../Components/GenderCheckbox'
 
 
 const SignUp = () => {

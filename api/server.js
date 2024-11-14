@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));  // Parses URL-encoded data
 
 app.use(express.json())
 
-// app.use(cors({origin: allowedOrigins,credentials:true}));
+app.use(cors({origin: "*"}));
 
 app.use("/api/auth",authRoute)
 app.use("/api/messages",messsageRoute)
