@@ -44,6 +44,7 @@ export const AuthContextProvider = ({children})=>{
         try {
             const res = await axiosInstance.post("/auth/logout")
             localStorage.removeItem("user")
+            localStorage.removeItem("token")
             setCurrUser(null)
             console.log(res)
             toast.success(res.data.message)
